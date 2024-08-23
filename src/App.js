@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+  const [showFinished, setShowFinished] = useState(true);
 
   useEffect(() => {
     let todoString = localStorage.getItem("todos");
@@ -19,6 +20,10 @@ function App() {
   //this function will save the data in local storage
   const saveToLS = (params) => {
     localStorage.setItem("todos", JSON.stringify(todos)); //will save the todos in local storage in string format
+  };
+
+  const toogleFinished = (e) => {
+    setShowFinished(!showFinished);
   };
 
   const handleEdit = (e, id) => {
@@ -72,7 +77,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="container  my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[80vh]">
+      <div className="container  my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[100vh] h-1/2">
         <div className="addTodo my-5">
           <h2 className="text-lg font-bold ">add a todo</h2>
           <input
@@ -84,11 +89,22 @@ function App() {
           />
           <button
             onClick={handleAdd}
-            className="px-2 py-1 m-6 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
+            //the button is disabled when the length of todo is less than 3
+            disabled={todo.length < 3}
+            className="px-2 py-1 m-6 rounded-md text-sm font-semibold text-blue-200 bg-blue-800 disbaled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-950"
           >
             save
           </button>
         </div>
+        {/* here we will show the todos which are not completed */}
+        {/* we are using the ternary operator to show the todos which are not completed
+        here we are using checked attribute to specify the value of button is true or false instead of using valuse attribute  */}
+        <input
+          onChange={toogleFinished}
+          type="checkbox"
+          checked={showFinished}
+        />
+        Show Finished
         <h2 className="text-xl font-bold">Your todo!</h2>
         <div className="todos">
           {todos.length === 0 && ( //if the input section is empty then this div will appear
@@ -96,38 +112,43 @@ function App() {
           )}
           {todos.map((item) => {
             return (
-              <div key={item.id} className="todo flex w-1/2 justify-between">
-                <input
-                  onChange={handleCheckbox}
-                  type="checkbox"
-                  value={item.isCompleted}
-                  name={item.id} //this will asign the current id of todo to name so we can access it in a function to togggle the check-box
-                  id=""
-                />
-                {/* if the checkbox is toggled then the selected will get a line-through the text */}
-                <div className={item.isCompleted ? "line-through" : ""}>
-                  {item.todo}
+              (showFinished || !item.isCompleted) && (
+                //if show finished is false then it will show only the todos which are not completed
+                //if show finished is true then it will show all the todos
+                //if show finished is true and the todo is completed then it will show the todo
+                <div key={item.id} className="todo flex w-1/2 justify-between">
+                  <input
+                    onChange={handleCheckbox}
+                    type="checkbox"
+                    checked={item.isCompleted}
+                    name={item.id} //this will asign the current id of todo to name so we can access it in a function to togggle the check-box
+                    id=""
+                  />
+                  {/* if the checkbox is toggled then the selected will get a line-through the text */}
+                  <div className={item.isCompleted ? "line-through" : ""}>
+                    {item.todo}
+                  </div>
+                  <div className="buttons flex h-full ">
+                    <button
+                      onClick={(e) => {
+                        handleEdit(e, item.id);
+                      }}
+                      className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        //(e)event function will be called on click
+                        handleDelete(e, item.id);
+                      }}
+                      className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-                <div className="buttons flex h-full ">
-                  <button
-                    onClick={(e) => {
-                      handleEdit(e, item.id);
-                    }}
-                    className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      //(e)event function will be called on click
-                      handleDelete(e, item.id);
-                    }}
-                    className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+              )
             );
           })}
         </div>
