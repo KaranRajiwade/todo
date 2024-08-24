@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import React from "react";
 import Navbar from "./components/Navbar";
 import { v4 as uuidv4 } from "uuid";
+import { FaEdit } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
 
 function App() {
   const [todo, setTodo] = useState("");
@@ -77,28 +79,31 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="container  my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[100vh] h-1/2">
-        <div className="addTodo my-5">
+      <div className="container  my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[80vh] md:w-1/2">
+        <h1 className="text-center text-xl font-bold">
+          toodles - Manage your todos at one place
+        </h1>
+        <div className="addTodo my-5 flex flex-col gap-2">
           <h2 className="text-lg font-bold ">add a todo</h2>
           <input
             type="text"
             onChange={handleChange}
             //value will add the current todo value in text field , it works like when we add a new todo ,it will change the todos value as the handleChange function updates it
             value={todo}
-            className="w-1/2"
+            className="w-full rounded-2xl px-5 py-1 "
           />
           <button
             onClick={handleAdd}
             //the button is disabled when the length of todo is less than 3
             disabled={todo.length < 3}
-            className="px-2 py-1 m-6 rounded-md text-sm font-semibold text-blue-200 bg-blue-800 disbaled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-950"
+            className="px-2 py-1 w-full rounded-md text-sm font-semibold text-blue-200 bg-blue-800 disbaled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-950"
           >
             save
           </button>
         </div>
         {/* here we will show the todos which are not completed */}
         {/* we are using the ternary operator to show the todos which are not completed
-        here we are using checked attribute to specify the value of button is true or false instead of using valuse attribute  */}
+        here we are using checked attribute to specify the value of button is true or false instead of using values attribute  */}
         <input
           onChange={toogleFinished}
           type="checkbox"
@@ -116,16 +121,23 @@ function App() {
                 //if show finished is false then it will show only the todos which are not completed
                 //if show finished is true then it will show all the todos
                 //if show finished is true and the todo is completed then it will show the todo
-                <div key={item.id} className="todo flex w-1/2 justify-between">
+                <div
+                  key={item.id}
+                  className="todo flex my-3 md:w-1/2 justify-between"
+                >
                   <input
                     onChange={handleCheckbox}
                     type="checkbox"
                     checked={item.isCompleted}
-                    name={item.id} //this will asign the current id of todo to name so we can access it in a function to togggle the check-box
+                    name={item.id} //this will assign the current id of todo to name so we can access it in a function to toggle the check-box
                     id=""
                   />
                   {/* if the checkbox is toggled then the selected will get a line-through the text */}
-                  <div className={item.isCompleted ? "line-through" : ""}>
+                  <div
+                    className={`${
+                      item.isCompleted ? "line-through" : ""
+                    } flex flex-auto ml-3 mt-1`}
+                  >
                     {item.todo}
                   </div>
                   <div className="buttons flex h-full ">
@@ -135,7 +147,7 @@ function App() {
                       }}
                       className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
                     >
-                      Edit
+                      <FaEdit />
                     </button>
                     <button
                       onClick={(e) => {
@@ -144,7 +156,7 @@ function App() {
                       }}
                       className="px-2 py-1 m-1 rounded-md text-sm font-semibold text-blue-200 bg-blue-800  hover:bg-blue-950"
                     >
-                      Delete
+                      <AiFillDelete />
                     </button>
                   </div>
                 </div>
