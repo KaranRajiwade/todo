@@ -79,7 +79,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="container  my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[80vh] md:w-1/2">
+      <div className="container  md:my-5 mx-auto p-5 rounded-xl bg-blue-100 min-h-[80vh] md:w-1/2">
         <h1 className="text-center text-xl font-bold">
           toodles - Manage your todos at one place
         </h1>
@@ -108,6 +108,7 @@ function App() {
           onChange={toogleFinished}
           type="checkbox"
           checked={showFinished}
+          className="mr-3"
         />
         Show Finished
         <h2 className="text-xl font-bold">Your todo!</h2>
